@@ -24,6 +24,30 @@ class UserController {
             return res.json({ success: false, message: error.message })
         }
     }
+
+    async viewUser(req, res) {
+        let slug = req.params.slug
+        try {
+            let user = await User.findOne({ slug })
+            if (!user) return res.json({ success: false, message: "User not found" })
+            return res.json({ success: true, message: "Get user data successfully", user })
+        } catch (error) {
+            console.log(error)
+            return res.json({ success: false, message: error.message })
+        }
+    }
+
+    async getUser(req, res) {
+        let _id = req._id
+        try {
+            const user = await User.findOne({ _id })
+            if (!user) return res.json({ success: false, message: "User not found" })
+            return res.json({ success: true, message: "Get user data successfully", user })
+        } catch (error) {
+            console.log(error)
+            return res.json({ success: false, message: error.message })
+        }
+    }
 }
 
 module.exports = new UserController();

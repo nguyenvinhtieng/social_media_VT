@@ -1,6 +1,6 @@
 const Post = require('../models/Post');
 const validator = require('validator');
-
+const { POST_SKIP } = require('../../credentials')
 class PostController {
     async createPost(req, res) {
         const { content, images } = req.body
@@ -46,6 +46,22 @@ class PostController {
             const post = await Post.findById(_id)
             if (!post) return res.json({ success: false, message: "Post not found!" })
             return res.json({ success: true, message: "Get post successfully!", post })
+        } catch (error) {
+            console.log(error)
+            return res.json({ success: false, message: error.message })
+        }
+    }
+
+    async getTenPost(req, res) {
+        let { page, userid } = req.body
+        let skip = page * POST_SKIP
+        const condition = {}
+        if (userid) condition.userid = userid
+        try {
+            let numberPost = await Post.count(condition)
+            if (numberPost <= skip) return res.json({ success: false, message: "You was read all posts!" })
+            let post = await Post.find(condition).skip(skip).sort({ createdAt: -1 }).limit(POST_SKIP).lean()
+            return res.json({ success: true, message: `Get post successfully, page ${page}`, post })
         } catch (error) {
             console.log(error)
             return res.json({ success: false, message: error.message })

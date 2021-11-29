@@ -5,12 +5,10 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../../credentials')
 
 class AuthController {
-
-
     async LoginHandler(req, res) {
         const { username, password } = req.body
-        if (validator.isEmpty(username, [{ ignore_whitespace: false }])
-            || validator.isEmpty(password, [{ ignore_whitespace: false }]))
+        if (validator.isEmpty(username ? username : "", [{ ignore_whitespace: false }])
+            || validator.isEmpty(password ? password : "", [{ ignore_whitespace: false }]))
             return res.json({ success: false, message: 'Empty username or password' })
         try {
             let account = await Account.findOne({ username })

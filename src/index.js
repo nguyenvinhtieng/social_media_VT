@@ -3,6 +3,7 @@ const app = express();
 var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(express.json())
 const { PORT } = require('./credentials')
 const port = PORT || 8080
 const route = require('./route')

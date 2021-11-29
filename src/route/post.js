@@ -4,6 +4,7 @@ const isLogin = require('../app/middlewares/checkLogin')
 const permissionAccessPost = require('../app/middlewares/permissionAccessPost')
 const PostController = require('../app/controllers/PostController')
 
+router.post('/page', isLogin, PostController.getTenPost);
 router.post('/', isLogin, PostController.createPost);
 router.put('/', isLogin, permissionAccessPost, PostController.editPost);
 router.delete('/', isLogin, permissionAccessPost, PostController.deletePost);
