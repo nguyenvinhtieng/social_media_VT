@@ -1,4 +1,4 @@
-const Account = require('../models/Account')
+const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const { SECRET_KEY } = require('../../credentials')
 
@@ -11,8 +11,8 @@ async function isLogin(req, res, next) {
     try {
         var decoded = jwt.verify(token, SECRET_KEY)
         const { _id } = decoded
-        let account = await Account.findOne({ _id })
-        if (!account) return res.json({ success: false, message: "User was not found" })
+        let user = await User.findOne({ _id })
+        if (!user) return res.json({ success: false, message: "User was not found" })
         req._id = _id
         next()
     } catch (error) {

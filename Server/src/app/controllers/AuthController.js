@@ -1,4 +1,4 @@
-const Account = require('../models/Account');
+const User = require('../models/User');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -11,11 +11,11 @@ class AuthController {
             || validator.isEmpty(password ? password : "", [{ ignore_whitespace: false }]))
             return res.json({ success: false, message: 'Empty username or password' })
         try {
-            let account = await Account.findOne({ username })
-            if (!account) return res.json({ success: false, message: 'Username incorrect!' })
-            let validPassword = await bcrypt.compare(password, account.password)
+            let user = await User.findOne({ username })
+            if (!user) return res.json({ success: false, message: 'Username incorrect!' })
+            let validPassword = await bcrypt.compare(password, user.password)
             if (!validPassword) return res.json({ success: false, message: 'Password incorrect!' })
-            let token = jwt.sign({ _id: account._id }, SECRET_KEY);
+            let token = jwt.sign({ _id: user._id }, SECRET_KEY);
             return res.json({ success: true, message: 'Login successfully!', token })
         } catch (error) {
             console.log(error)
@@ -24,20 +24,19 @@ class AuthController {
     }
 
     async RegisterHandler(req, res) {
-        const { username, password } = req.body
-        if (validator.isEmpty(username, [{ ignore_whitespace: false }])
-            || validator.isEmpty(password, [{ ignore_whitespace: false }]))
-            return res.json({ success: false, message: 'Empty username or password' })
+        const { username, password, name, image } = req.body
+        if (username.trim() === '' || password.trim() === '' || name.trim() === '')
+            return res.json({ success: false, message: 'Missing data!' })
         try {
-            const acc = await Account.findOne({ username })
-            if (acc) {
+            const us = await User.findOne({ username })
+            if (us) {
                 return res.json({ success: false, message: "Username was exitst!" })
             }
             let newPass = await bcrypt.hash(password, 10);
-            const data = { username, password: newPass }
-            const account = new Account(data)
-            await account.save()
-            return res.json({ success: true, message: "Register success!" })
+            const data = { username, password: newPass, name }
+            const user = new User(data)
+            await user.save()
+            return res.json({ success: true, message: "Register success!", user })
         } catch (error) {
             console.log(error)
             return res.json({ success: false, message: err.message })

@@ -1,0 +1,7 @@
+.mainContainer {
+    margin-top: 55px;
+    display: flex;
+    justify-content: center;
+    width: 816px;
+    gap: 8px;
+}

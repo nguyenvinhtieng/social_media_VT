@@ -3,14 +3,16 @@ const slug = require('mongoose-slug-generator');
 const Schema = mongoose.Schema;
 
 const User = new Schema({
-    userid: { type: Schema.Types.ObjectId, ref: 'Account' },
+    username: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
     name: { type: String },
-    email: { type: String },
-    introduction: { type: String },
-    image: { type: String },
-    website: { type: String },
-    common: { type: String, default: "no" }, // yes or no,
-    slug: { type: String, slug: "name" }
+    email: { type: String, default: '' },
+    introduction: { type: String, default: '' },
+    image: { type: String, default: '' },
+    website: { type: String, deafult: '' },
+    common: { type: String, default: "no" },
+    slug: { type: String, slug: "name" },
+    role: { type: String, default: 'user' }
 },
     {
         timestamps: true
